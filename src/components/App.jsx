@@ -51,7 +51,7 @@ export function App() {
     >
       <Section title="Please leave feedback">
         <Feedback
-          options={{ good, neutral, bad }}
+          options={Object.keys({ good, neutral, bad })}
           onLeaveFeedback={showFeedback}
         />
       </Section>
