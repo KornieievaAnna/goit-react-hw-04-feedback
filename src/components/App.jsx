@@ -1,49 +1,41 @@
+import { useState } from 'react';
 import { Feedback, Statistic, Section, Notification } from 'components/index';
-import React, { Component } from 'react';
 
-class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export function App() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const showFeedback = e => {
+    switch (e.target.name) {
+      case 'good':
+        setGood(prevState => prevState + 1);
+        break;
+      case 'neutral':
+        setNeutral(prevState => prevState + 1);
+        break;
+      case 'bad':
+        setBad(prevState => prevState + 1);
+        break;
+      default:
+        return;
+    }
   };
 
-  countTotalFeedback() {
-    return this.state.good + this.state.neutral + this.state.bad;
-  }
-
-  countPositiveFeedbackPercentage = () => {
-    if (this.countTotalFeedback) {
-      return Math.round((this.state.good / this.countTotalFeedback()) * 100);
+  const countPositiveFeedbackPercentage = () => {
+    if (countTotalFeedback) {
+      return Math.round((good / countTotalFeedback()) * 100);
     }
     return 0;
   };
 
-  showFeedback = options => {
-    this.setState(prevState => ({ [options]: prevState[options] + 1 }));
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
   };
 
-  // handleIncrementGood = () => {
-  //   this.setState(prevState => ({
-  //     good: prevState.good + 1,
-  //   }));
-  // };
-
-  // handleIncrementNeutral = () => {
-  //   this.setState(prevState => ({
-  //     neutral: prevState.neutral + 1,
-  //   }));
-  // };
-
-  // handleIncrementBad = () => {
-  //   this.setState(prevState => ({
-  //     bad: prevState.bad + 1,
-  //   }));
-  // };
-
-  render() {
-    return (
-      <div style={{
+  return (
+    <div
+      style={{
         display: 'flex',
         justifyContent: 'center',
         border: '1px solid black',
@@ -55,29 +47,28 @@ class App extends Component {
         alignItems: 'center',
         flexDirection: 'column',
         margin: '0 auto',
-      }}>
-        <Section title="Please leave feedback">
-          <Feedback
-            options={Object.keys(this.state)}
-            onLeaveFeedback={this.showFeedback}
+      }}
+    >
+      <Section title="Please leave feedback">
+        <Feedback
+          options={{ good, neutral, bad }}
+          onLeaveFeedback={showFeedback}
+        />
+      </Section>
+      <Section title="Statistics">
+        {countTotalFeedback() !== 0 ? (
+          <Statistic
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={countTotalFeedback()}
+            percentage={countPositiveFeedbackPercentage()}
           />
-        </Section>
-        <Section title="Statistics">
-          {this.countTotalFeedback() !== 0 ? (
-            <Statistic
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.countTotalFeedback()}
-              percentage={this.countPositiveFeedbackPercentage()}
-            />
-          ) : (
-            <Notification message="There is no feedback"></Notification>
-          )}
-        </Section>
-      </div>
-    );
-  }
+        ) : (
+          <Notification message="There is no feedback"></Notification>
+        )}
+      </Section>
+    </div>
+  );
 }
 export default App;
-
