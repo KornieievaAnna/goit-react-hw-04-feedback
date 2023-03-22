@@ -32,7 +32,6 @@ export function App() {
   const countTotalFeedback = () => {
     return good + neutral + bad;
   };
-
   return (
     <div
       style={{
